@@ -24,6 +24,7 @@ public class BatTextActivity extends Activity {
 	EditText txtMessage;
 	Switch enableBatText;
 	Context context = getBaseContext();
+	
 
 	/** Called when the activity is first created. */
 	@Override
