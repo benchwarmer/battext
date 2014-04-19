@@ -1,9 +1,9 @@
 package com.drew.BatText;
 
 import android.annotation.TargetApi;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.Ringtone;
@@ -47,6 +47,7 @@ public class SettingsActivity extends PreferenceActivity {
 	 */
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 	private static final int PICK_CONTACT_REQUEST = 1;
+	public static final String KEY_PREF_FOREGROUND = "foreground_service";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,7 @@ public class SettingsActivity extends PreferenceActivity {
 		// Bind the summaries of EditText/List/Dialog/Ringtone preferences to
 		// their values. When their values change, their summaries are updated
 		// to reflect the new value, per the Android Design guidelines.
+		setPreferenceActionBoolean(findPreference(KEY_PREF_FOREGROUND));
 		bindPreferenceSummaryToValue(findPreference("example_text"));
 		bindPreferenceSummaryToValue(findPreference("example_list"));
 		bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
@@ -225,6 +227,30 @@ public class SettingsActivity extends PreferenceActivity {
 			return true;
 		}
 	};
+	
+	/**
+	 * A preference value change listener that performs actions
+	 */
+	private static Preference.OnPreferenceChangeListener setPreferenceActionListener = new Preference.OnPreferenceChangeListener() {
+		
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object value) {
+			String stringValue = value.toString();
+			Context context = preference.getContext();
+			
+			// If the user selected run service in foreground, restart it
+			if (preference.getKey() == KEY_PREF_FOREGROUND) {
+				Intent serviceIntent = new Intent(context, BatTextService.class);
+				if (stringValue == "true") {
+					boolean stopService = context.stopService(serviceIntent);
+					if (stopService) {
+						context.startService(serviceIntent);
+					}
+				}
+			}
+			return true;
+		}
+	};
 
 	/**
 	 * Binds a preference's summary to its value. More specifically, when the
@@ -248,6 +274,24 @@ public class SettingsActivity extends PreferenceActivity {
 						preference.getContext()).getString(preference.getKey(),
 						""));
 	}
+	
+	/**
+	 * Sets the action to perform when a preference is changed
+	 * 
+	 */
+	private static void setPreferenceActionBoolean(Preference preference) {
+		// Set the listener to watch for value changes.
+		preference
+				.setOnPreferenceChangeListener(setPreferenceActionListener);
+
+		// Trigger the listener immediately with the preference's
+		// current value.
+		setPreferenceActionListener.onPreferenceChange(
+				preference,
+				PreferenceManager.getDefaultSharedPreferences(
+						preference.getContext()).getBoolean(preference.getKey(),
+						false));
+	}
 
 	/**
 	 * This fragment shows general preferences only. It is used when the
@@ -264,6 +308,7 @@ public class SettingsActivity extends PreferenceActivity {
 			// to their values. When their values change, their summaries are
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
+			setPreferenceActionBoolean(findPreference(KEY_PREF_FOREGROUND));
 			bindPreferenceSummaryToValue(findPreference("example_text"));
 			bindPreferenceSummaryToValue(findPreference("example_list"));
 		}

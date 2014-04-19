@@ -11,6 +11,8 @@
     <string name="pref_title_enable_service">Battery Service</string>
     <string name="pref_description_enable_service_on">The battery service will listen for changes in battery state.</string>
     <string name="pref_description_enable_service_off">The battery service is off, your alerts will not be sent.</string>
+    <string name="pref_title_foreground_service">Keep Battery Service Alive</string>
+    <string name="pref_description_foreground_service">Check this to make sure the app will always monitor your battery. This setting will cause a notification icon at all times.</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>
     <string name="pref_title_display_name">Display name</string>
