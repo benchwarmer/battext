@@ -4,19 +4,23 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.support.v4.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 public class BatTextService extends Service {
 	//private static final String ACTION = "Intent.ACTION_BATTERY_CHANGED";
 	public static final String PREFS_NAME = "BatTextPrefsFile";
 	public static final int ONGOING_NOTIFICATION_ID = 808;
+	private static final String debugTag = "BatTextService";
 	private BroadcastReceiver receiver;
+	private SharedPreferences sharedPref;
 	
 	public BatTextService() {
 		
@@ -31,6 +35,7 @@ public class BatTextService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Toast.makeText(this, "BatTextService.onCreate called.", Toast.LENGTH_LONG).show();
 		
 		// Register the battery change receiver
 		IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -41,14 +46,15 @@ public class BatTextService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
 		super.onStartCommand(intent, flags, startId);
-		
-		//SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_MULTI_PROCESS);
-		//SharedPreferences.Editor editor = prefs.edit();
-		//editor.putBoolean("batteryServiceStarted", true).commit();
+		Toast.makeText(this, "BatTextService.onStartCommand called.", Toast.LENGTH_LONG).show();
+		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_MULTI_PROCESS);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean("batteryServiceStarted", true).commit();
 		
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		Boolean runInForeground = sharedPref.getBoolean(SettingsActivity.KEY_PREF_FOREGROUND, false);
-		
+		Log.d(debugTag, "runInForeground: " + runInForeground);
+		Toast.makeText(this, "runInForeground: " + runInForeground, Toast.LENGTH_LONG).show();
 		if(runInForeground) {
 			Intent resultIntent = new Intent(this, BatTextActivity.class);
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

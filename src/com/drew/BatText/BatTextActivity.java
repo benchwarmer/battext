@@ -25,7 +25,6 @@ public class BatTextActivity extends Activity {
 	EditText txtMessage;
 	Switch enableBatText;
 	Context context = getBaseContext();
-	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -51,6 +50,8 @@ public class BatTextActivity extends Activity {
 			txtNumber.setText(savedNumber);
 			txtMessage.setText(savedMessage);
 		}
+		
+		
 
 		// Save Button Click Handler
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,6 @@ public class BatTextActivity extends Activity {
 
 				Toast toast = Toast.makeText(context, toastText, duration);
 				toast.show();
-
 			}
 		});
 		

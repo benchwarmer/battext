@@ -239,9 +239,9 @@ public class SettingsActivity extends PreferenceActivity {
 			Context context = preference.getContext();
 			
 			// If the user selected run service in foreground, restart it
-			if (preference.getKey() == KEY_PREF_FOREGROUND) {
-				Intent serviceIntent = new Intent(context, BatTextService.class);
-				if (stringValue == "true") {
+			if (preference.getKey().equals(KEY_PREF_FOREGROUND)) {
+				if (stringValue.equals("true")) {
+					Intent serviceIntent = new Intent(context, BatTextService.class);
 					boolean stopService = context.stopService(serviceIntent);
 					if (stopService) {
 						context.startService(serviceIntent);
