@@ -24,15 +24,15 @@ public class BatTextActivity extends Activity {
 	EditText txtNumber;
 	EditText txtMessage;
 	Switch enableBatText;
-	Context context = getBaseContext();
+	Context context = this;
+	
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		
-		final Intent serviceIntent = new Intent(this, BatTextService.class);
+
 		//startService(serviceIntent);
 		
 		// Restore preferences
@@ -84,8 +84,10 @@ public class BatTextActivity extends Activity {
 		
 		// Switch handler
 		enableBatText.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Intent serviceIntent = new Intent(context, BatTextService.class);
 				if (isChecked) {
 					// Start the battery listening service
 					startService(serviceIntent);
@@ -117,6 +119,8 @@ public class BatTextActivity extends Activity {
 	
 	public void onDestroy(){
 		super.onDestroy();
+		Intent serviceIntent = new Intent(context, BatTextService.class);
+		stopService(serviceIntent);
 	}
 	
 	@Override

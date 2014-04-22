@@ -20,7 +20,6 @@ public class BatTextService extends Service {
 	public static final int ONGOING_NOTIFICATION_ID = 808;
 	private static final String debugTag = "BatTextService";
 	private BroadcastReceiver receiver;
-	private SharedPreferences sharedPref;
 	
 	public BatTextService() {
 		
