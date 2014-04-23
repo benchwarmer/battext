@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.support.v4.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -15,8 +14,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class BatTextService extends Service {
-	//private static final String ACTION = "Intent.ACTION_BATTERY_CHANGED";
-	public static final String PREFS_NAME = "BatTextPrefsFile";
 	public static final int ONGOING_NOTIFICATION_ID = 808;
 	private static final String debugTag = "BatTextService";
 	private BroadcastReceiver receiver;
@@ -46,10 +43,8 @@ public class BatTextService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId){
 		super.onStartCommand(intent, flags, startId);
 		Toast.makeText(this, "BatTextService.onStartCommand called.", Toast.LENGTH_LONG).show();
-		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_MULTI_PROCESS);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean("batteryServiceStarted", true).commit();
 		
+		// TODO: mark service as started
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		Boolean runInForeground = sharedPref.getBoolean(SettingsActivity.KEY_PREF_FOREGROUND, false);
 		Log.d(debugTag, "runInForeground: " + runInForeground);
@@ -79,8 +74,6 @@ public class BatTextService extends Service {
 		Toast.makeText(this, "Battery Service was killed. You will need to restart the service in order for your messages to send.", Toast.LENGTH_LONG).show();
 		super.onDestroy();
 		this.unregisterReceiver(this.receiver);
-		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_MULTI_PROCESS);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean("batteryServiceStarted", false).commit();
+		// TODO: mark service as stopped
 	}
 }

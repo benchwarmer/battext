@@ -6,23 +6,5 @@
     <header
         android:fragment="com.drew.BatText.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
-    <header
-        android:fragment="com.drew.BatText.SettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications" />
-    <header
-        android:fragment="com.drew.BatText.SettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" />
-
-    <!-- These settings headers are only used on tablets. -->
-
-    <header
-        android:fragment="com.drew.BatText.BatTextSettingsActivity$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general" />
-    <header
-        android:fragment="com.drew.BatText.BatTextSettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications" />
-    <header
-        android:fragment="com.drew.BatText.BatTextSettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" />
-
+ 
 </preference-headers>

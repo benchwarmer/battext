@@ -3,12 +3,8 @@
 
     <string name="hello">Hello World, BatTextActivity!</string>
     <string name="app_name">Battery Alert</string>
-    <string name="numInfo">Enter the phone number of the recipient.</string>
-    <string name="numHint">Phone Number</string>
-    <string name="mesInfo">Enter your message here.</string>
-    <string name="mesHint">Text Message</string>
-    <string name="saveButton">Save</string>
-    <string name="saveToast">Information Saved.</string>
+    <string name="main_service">Battery Alert Service</string>
+    <string name="mesInfo">Soon to come, a list of selected alerts!</string>
     <string name="notif_ticker">Low battery text sent.</string>
     <string name="notif_contentTitle">Low Battery</string>
     <string name="notif_contentText">A text has been sent because your battery is low.</string>

@@ -9,59 +9,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/txtNumber"
-        android:text="@string/mesInfo" />
-
-    <EditText
-        android:id="@+id/txtMessage"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/messageInfo"
-        android:ems="10"
-        android:hint="@string/mesHint"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/txtNumber"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/numberInfo"
-        android:ems="10"
-        android:hint="@string/numHint"
-        android:inputType="phone" />
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtMessage"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="46dp"
-        android:text="@string/saveButton" />
-
-    <Switch
-        android:id="@+id/enableBatText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="22dp"
-        android:checked="false"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/numberInfo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/enableBatText"
-        android:layout_marginTop="30dp"
-        android:text="@string/numInfo" />
+        android:layout_marginTop="175dp"
+        android:text="@string/mesInfo" />
 
 </RelativeLayout>

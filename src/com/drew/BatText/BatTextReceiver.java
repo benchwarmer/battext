@@ -7,10 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.BatteryManager;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 import android.support.v4.app.NotificationCompat;
@@ -26,8 +23,6 @@ public class BatTextReceiver extends BroadcastReceiver {
 
 		Toast.makeText(context, "Successful Broadcast!", Toast.LENGTH_LONG).show();
 		
-		//int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-		//int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
 		boolean isPresent = intent.getBooleanExtra("present", false);
         String technology = intent.getStringExtra("technology");
         int plugged = intent.getIntExtra("plugged", -1);
@@ -42,18 +37,16 @@ public class BatTextReceiver extends BroadcastReceiver {
         
 
 		// Get Saved Preferences
-		SharedPreferences settings = context.getSharedPreferences(
-				BatTextActivity.PREFS_NAME, 0);
-		String number = settings.getString("number", "");
-		String message = settings.getString("message", "");
+		
 
 		// Send the Text
-		SmsManager sm = SmsManager.getDefault();
-		sm.sendTextMessage(number, null, message, null, null);
+		//SmsManager sm = SmsManager.getDefault();
+		//sm.sendTextMessage(number, null, message, null, null);
 
-		Resources res = context.getResources();
+		
 		
 		// Notification
+        Resources res = context.getResources();
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(context)
 		        .setSmallIcon(R.drawable.ic_stat_notif)
