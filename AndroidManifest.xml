@@ -21,8 +21,7 @@
 
         <activity
             android:name="com.drew.BatText.BatTextActivity"
-            android:label="@string/app_name"
-            android:process=":batTextActivity" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

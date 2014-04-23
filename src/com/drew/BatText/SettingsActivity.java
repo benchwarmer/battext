@@ -3,14 +3,18 @@ package com.drew.BatText;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
@@ -28,7 +32,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 	/**
 	 * Determines whether to always show the simplified settings UI, where
 	 * settings are presented in a single list. When false, settings are shown
@@ -37,11 +41,28 @@ public class SettingsActivity extends PreferenceActivity {
 	 */
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 	public static final String KEY_PREF_FOREGROUND = "foreground_service";
+	public static final String KEY_PREF_ENABLE_SERVICE = "enable_service";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setupActionBar();
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    getPreferenceScreen().getSharedPreferences()
+	            .registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	    getPreferenceScreen().getSharedPreferences()
+	            .unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	/**
@@ -101,7 +122,8 @@ public class SettingsActivity extends PreferenceActivity {
 		// Bind the summaries of EditText/List/Dialog/Ringtone preferences to
 		// their values. When their values change, their summaries are updated
 		// to reflect the new value, per the Android Design guidelines.
-		setPreferenceActionBoolean(findPreference(KEY_PREF_FOREGROUND));
+		//setPreferenceAction(findPreference(KEY_PREF_FOREGROUND));
+		//setPreferenceAction(findPreference(KEY_PREF_ENABLE_SERVICE));
 	}
 
 	/** {@inheritDoc} */
@@ -139,6 +161,33 @@ public class SettingsActivity extends PreferenceActivity {
 			loadHeadersFromResource(R.xml.pref_headers, target);
 		}
 	}
+	
+	
+	@SuppressWarnings("deprecation")
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		Preference preference = findPreference(key);
+		Context context = preference.getContext();
+		Intent serviceIntent = new Intent(context, BatTextService.class);
+
+		if (preference instanceof CheckBoxPreference) {
+			if (preference.getKey().equals(KEY_PREF_FOREGROUND)) {
+					boolean stopService = context.stopService(serviceIntent);
+					if (stopService) {
+						context.startService(serviceIntent);						
+					}
+			}
+		} else if (preference instanceof SwitchPreference) {
+			SwitchPreference switchPref = (SwitchPreference) preference;
+			if (preference.getKey().equals(KEY_PREF_ENABLE_SERVICE)) {
+				if (switchPref.isChecked()) {
+					context.startService(serviceIntent);
+				}
+				else {
+					context.stopService(serviceIntent);
+				}
+			}	
+		}
+    }
 
 	/**
 	 * A preference value change listener that updates the preference's summary
@@ -177,16 +226,25 @@ public class SettingsActivity extends PreferenceActivity {
 		public boolean onPreferenceChange(Preference preference, Object value) {
 			String stringValue = value.toString();
 			Context context = preference.getContext();
-			
-			// If the user selected run service in foreground, restart it
-			if (preference.getKey().equals(KEY_PREF_FOREGROUND)) {
-				if (stringValue.equals("true")) {
-					Intent serviceIntent = new Intent(context, BatTextService.class);
-					boolean stopService = context.stopService(serviceIntent);
-					if (stopService) {
+			Intent serviceIntent = new Intent(context, BatTextService.class);
+
+			if (preference instanceof CheckBoxPreference) {
+				if (preference.getKey().equals(KEY_PREF_FOREGROUND)) {
+						boolean stopService = context.stopService(serviceIntent);
+						if (stopService) {
+							context.startService(serviceIntent);						
+						}
+				}
+			} else if (preference instanceof SwitchPreference) {
+				SwitchPreference switchPref = (SwitchPreference) preference;
+				if (preference.getKey().equals(KEY_PREF_ENABLE_SERVICE)) {
+					if (switchPref.isChecked()) {
 						context.startService(serviceIntent);
 					}
-				}
+					else {
+						context.stopService(serviceIntent);
+					}
+				}	
 			}
 			return true;
 		}
@@ -216,22 +274,22 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 	
 	/**
-	 * Sets the action to perform when a preference is changed
+	 * Sets the action to perform when a preference is changed for Booleans
 	 * 
 	 */
-	private static void setPreferenceActionBoolean(Preference preference) {
+	private static void setPreferenceAction(Preference preference) {
 		// Set the listener to watch for value changes.
 		preference
 				.setOnPreferenceChangeListener(setPreferenceActionListener);
 
 		// Trigger the listener immediately with the preference's
 		// current value.
-		setPreferenceActionListener.onPreferenceChange(
-				preference,
-				PreferenceManager.getDefaultSharedPreferences(
-						preference.getContext()).getBoolean(preference.getKey(),
-						false));
+//		setPreferenceActionListener.onPreferenceChange(
+//				preference 
+//				,PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getBoolean(preference.getKey(),false)
+//		);
 	}
+	
 
 	/**
 	 * This fragment shows general preferences only. It is used when the
@@ -248,9 +306,8 @@ public class SettingsActivity extends PreferenceActivity {
 			// to their values. When their values change, their summaries are
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
-			setPreferenceActionBoolean(findPreference(KEY_PREF_FOREGROUND));
-			bindPreferenceSummaryToValue(findPreference("example_text"));
-			bindPreferenceSummaryToValue(findPreference("example_list"));
+			//setPreferenceAction(findPreference(KEY_PREF_FOREGROUND));
+			//setPreferenceAction(findPreference(KEY_PREF_ENABLE_SERVICE));
 		}
 	}
 }

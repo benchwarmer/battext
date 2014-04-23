@@ -18,17 +18,20 @@ public class BatTextActivity extends Activity {
 		setContentView(R.layout.main);
 	}
 	
+	@Override
 	public void onPause(){
 		super.onPause();
 	}
 	
+	@Override
 	public void onResume(){
 		super.onResume();
 	}
 	
+	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		Intent serviceIntent = new Intent(context, BatTextService.class);
+		Intent serviceIntent = new Intent(this, BatTextService.class);
 		stopService(serviceIntent);
 	}
 	

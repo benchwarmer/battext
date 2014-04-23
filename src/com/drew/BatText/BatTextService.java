@@ -30,7 +30,7 @@ public class BatTextService extends Service {
 	
 	@Override
 	public void onCreate() {
-		super.onCreate();
+		//super.onCreate();
 		Toast.makeText(this, "BatTextService.onCreate called.", Toast.LENGTH_LONG).show();
 		
 		// Register the battery change receiver
@@ -41,7 +41,7 @@ public class BatTextService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
-		super.onStartCommand(intent, flags, startId);
+		//super.onStartCommand(intent, flags, startId);
 		Toast.makeText(this, "BatTextService.onStartCommand called.", Toast.LENGTH_LONG).show();
 		
 		// TODO: mark service as started
@@ -74,6 +74,9 @@ public class BatTextService extends Service {
 		Toast.makeText(this, "Battery Service was killed. You will need to restart the service in order for your messages to send.", Toast.LENGTH_LONG).show();
 		super.onDestroy();
 		this.unregisterReceiver(this.receiver);
-		// TODO: mark service as stopped
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putBoolean(SettingsActivity.KEY_PREF_ENABLE_SERVICE, false);
+		editor.commit();
 	}
 }
