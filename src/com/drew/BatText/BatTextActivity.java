@@ -31,8 +31,6 @@ public class BatTextActivity extends Activity {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		Intent serviceIntent = new Intent(this, BatTextService.class);
-		stopService(serviceIntent);
 	}
 	
 	@Override
