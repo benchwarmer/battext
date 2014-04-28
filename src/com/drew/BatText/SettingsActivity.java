@@ -1,6 +1,8 @@
 package com.drew.BatText;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -180,10 +182,21 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			SwitchPreference switchPref = (SwitchPreference) preference;
 			if (preference.getKey().equals(KEY_PREF_ENABLE_SERVICE)) {
 				if (switchPref.isChecked()) {
-					context.startService(serviceIntent);
+					AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+					Intent intent = new Intent(context, BatTextReceiver.class);
+					PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0); 
+					am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 300000, 300000, alarmIntent);
+					
+					
 				}
 				else {
-					context.stopService(serviceIntent);
+					// If the alarm has been set, cancel it.
+					AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+					if (am != null) {
+						Intent intent = new Intent(context, BatTextReceiver.class);
+						PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0); 
+					    am.cancel(alarmIntent);
+					}
 				}
 			}	
 		}

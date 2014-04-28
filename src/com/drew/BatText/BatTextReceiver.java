@@ -7,29 +7,41 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 public class BatTextReceiver extends BroadcastReceiver {
+	
+	private String tag = "BatTextReceiver"; 
 
 	private static final int BATTEXT_ID = 1;
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "deprecation" })
 	@SuppressLint("NewApi")
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag);
+		wl.acquire();
+		
+		
 
 		Toast.makeText(context, "Successful Broadcast!", Toast.LENGTH_LONG).show();
 		
-		boolean isPresent = intent.getBooleanExtra("present", false);
-        String technology = intent.getStringExtra("technology");
-        int plugged = intent.getIntExtra("plugged", -1);
-        int scale = intent.getIntExtra("scale", -1);
-        int health = intent.getIntExtra("health", 0);
-        int status = intent.getIntExtra("status", 0);
-        int rawlevel = intent.getIntExtra("level", -1);
+		IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+		Intent batteryStatus = context.registerReceiver(null, ifilter);
+		
+		boolean isPresent = batteryStatus.getBooleanExtra("present", false);
+        String technology = batteryStatus.getStringExtra("technology");
+        int plugged = batteryStatus.getIntExtra("plugged", -1);
+        int scale = batteryStatus.getIntExtra("scale", -1);
+        int health = batteryStatus.getIntExtra("health", 0);
+        int status = batteryStatus.getIntExtra("status", 0);
+        int rawlevel = batteryStatus.getIntExtra("level", -1);
         int level = (rawlevel * 100) / scale;
         
         Log.d("battext", "Level: " + level );
