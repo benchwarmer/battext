@@ -1,5 +1,9 @@
 package com.drew.BatText;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.CardThumbnail;
+import it.gmariotti.cardslib.library.view.CardView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +20,26 @@ public class BatTextActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		// Create a Card
+		Card card = new Card(this, R.layout.row_card);
+		 
+		// Create a CardHeader
+		CardHeader header = new CardHeader(this);
+		header.setTitle("Hello world");
+		         
+		card.setTitle("Simple card demo");
+		CardThumbnail thumb = new CardThumbnail(this);
+		thumb.setDrawableResource(R.drawable.ic_launcher);
+		         
+		card.addCardThumbnail(thumb);
+		         
+		// Add Header to card
+		card.addCardHeader(header);
+		 
+		// Set card in the cardView
+		CardView cardView = (CardView) findViewById(R.id.carddemo);
+		cardView.setCard(card);
 	}
 	
 	@Override

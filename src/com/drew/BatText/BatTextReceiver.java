@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
-import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 
 public class BatTextReceiver extends BroadcastReceiver {
@@ -24,12 +23,7 @@ public class BatTextReceiver extends BroadcastReceiver {
 	@SuppressLint("NewApi")
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag);
-		wl.acquire();
 		
-		
-
 		Toast.makeText(context, "Successful Broadcast!", Toast.LENGTH_LONG).show();
 		
 		IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
