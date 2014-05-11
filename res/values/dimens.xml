@@ -1,0 +1,4 @@
+
+    <resources>
+        <dimen name="alertcard_text_size_special">20sp</dimen>
+    </resources>

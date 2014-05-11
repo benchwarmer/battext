@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="3dp"
+              android:gravity="left"
+              android:layout_height="96dp">
+
+    <TextView
+        android:id="@+id/main_inner_default_text_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_inner_default_text_1"
+    />
+    
+    <TextView
+        android:id="@+id/main_inner_alerttype"
+        style="@style/alertcard.inner_content_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:clickable="true"
+        android:text="@string/inner_special_text_1" 
+    />       
+
+	<TextView
+        android:id="@+id/main_inner_default_text_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/main_inner_default_text_2"
+    />
+	
+	<TextView
+        android:id="@+id/main_inner_contact"
+        style="@style/alertcard.inner_content_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/inner_special_text_2" 
+    />
+	
+	<TextView
+        android:id="@+id/main_inner_default_text_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/main_inner_default_text_3"
+    />
+	
+	<TextView
+        android:id="@+id/main_inner_percent"
+        style="@style/alertcard.inner_content_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/inner_special_text_3" 
+    />
+
+</LinearLayout>

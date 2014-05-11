@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -15,6 +15,15 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+    <style name="alertcard">
+		
+    </style>
+    
+    <style name="alertcard.inner_content_special" >
+        <item name="android:textColor">@color/alertcard_text_color_special</item>
+        <item name="android:textSize">@dimen/alertcard_text_size_special</item>
     </style>
 
 </resources>

@@ -9,5 +9,21 @@
     <string name="notif_contentTitle">Low Battery</string>
     <string name="notif_contentText">A text has been sent because your battery is low.</string>
     <string name="menu_settings">Settings</string>
-
+    
+    <!-- String for alert card inner text default  -->
+    <string name="main_inner_default_text_1">Send a</string>
+    <string name="main_inner_default_text_2">to</string>
+    <string name="main_inner_default_text_3">at</string>
+    
+    <string name="inner_special_text_1">text</string>
+    <string name="inner_special_text_2">Drew</string>
+    <string name="inner_special_text_3">15%</string>
+    <string name="alerttype_dialog_title">Select Alert Type</string>
+    <string-array name="alerttype_options">
+        <item>Text Message</item>
+        <item>E-mail</item>
+        <item>Other</item>
+    </string-array>
+    
+    
 </resources>
