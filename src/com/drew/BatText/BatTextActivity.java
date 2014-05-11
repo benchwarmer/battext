@@ -19,8 +19,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Contacts;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +39,15 @@ public class BatTextActivity extends Activity {
 	private CardArrayAdapter mCardArrayAdapter;
     private UndoBarController mUndoBarController;
     private CardListView mListView;
+    private String mCurrentCardIdStr;
+    private int mCurrentCardIdInt;
+    
+    public String prefAlertTypePrefix = "alertCard_alertType_";
+    public String prefContactNamePrefix = "alertCard_contact_name_";
+    public String prefContactNumberPrefix = "alertCard_contact_number_";
+    
+    private static final int PICK_CONTACT = 1234;
+    
 	
     
 	/** Called when the activity is first created. */
@@ -103,18 +116,54 @@ public class BatTextActivity extends Activity {
 	    }
 	}
 	
+	@Override
+	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+	  super.onActivityResult(reqCode, resultCode, data);
+
+	  switch (reqCode) {
+	    case (PICK_CONTACT) :
+	      if (resultCode == Activity.RESULT_OK) {
+	        Uri contactData = data.getData();
+	        Cursor c =  getContentResolver().query(contactData, null, null, null, null);
+	        if (c.moveToFirst()) {
+	          String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+	          String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+	          Log.d("onActivityResultContact", "Contact Number: " + number);
+	          Toast.makeText(context, "Contact Number: " + number, Toast.LENGTH_SHORT).show();
+	          setContact(name, number, mCurrentCardIdStr); 
+	          
+	        }
+	      }
+	      break;
+	  }
+	}
+	
 	/****** Set Alert Value Methods **************/
 	public void setAlertType(String alertType, String alertId) {
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putString("alertType_" + alertId, alertType);
+		editor.putString(prefAlertTypePrefix + alertId, alertType);
 		editor.commit();
 		int positionFromId =  java.lang.Integer.parseInt(alertId);  
 		AlertCard card = (AlertCard) mCardArrayAdapter.getItem(positionFromId);
 		card.setAlertType(alertType, card);
 	}
 	
-	public String getAlertType(String alertType, String alertId) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getString("alertType_" + alertId, "");
+	public String getAlertType(String alertId) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(prefAlertTypePrefix + alertId, "");
+	}
+	
+	public void setContact(String name, String number, String alertId) {
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putString(prefContactNumberPrefix + alertId, number);
+		editor.putString(prefContactNamePrefix + alertId, name);
+		editor.commit();
+		int positionFromId =  java.lang.Integer.parseInt(alertId);  
+		AlertCard card = (AlertCard) mCardArrayAdapter.getItem(positionFromId);
+		card.setContact(name, card);
+	}
+	
+	public String getContact(String alertId) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(prefContactNamePrefix + alertId, "");
 	}
 	
 	
@@ -124,6 +173,7 @@ public class BatTextActivity extends Activity {
 	public class AlertCard extends Card {
 		private Card thisCard = this;
 		protected TextView mAlertType;
+		protected TextView mContact;
 		protected TextView mBatteryPercent;
 		
 		
@@ -166,27 +216,11 @@ public class BatTextActivity extends Activity {
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
-        	 int mId = java.lang.Integer.parseInt(this.getId());
-//            //Retrieve elements
-//            mTitle = (TextView) parent.findViewById(R.id.carddemo_myapps_main_inner_title);
-//            mSecondaryTitle = (TextView) parent.findViewById(R.id.carddemo_myapps_main_inner_secondaryTitle);
-//            mRatingBar = (RatingBar) parent.findViewById(R.id.carddemo_myapps_main_inner_ratingBar);
-//
-//
-//            if (mTitle!=null)
-//                mTitle.setText(R.string.demo_custom_card_google_maps);
-//
-//            if (mSecondaryTitle!=null)
-//                mSecondaryTitle.setText(R.string.demo_custom_card_googleinc);
-//
-//            if (mRatingBar!=null)
-//                mRatingBar.setNumStars(5);
-//                mRatingBar.setMax(5);
-//                mRatingBar.setRating(4.7f);
-        	
+        	 
+        	// Setup alertType
         	mAlertType = (TextView) parent.findViewById(R.id.main_inner_alerttype);
         	if(mAlertType!=null) {
-        		String alertTypeStr = PreferenceManager.getDefaultSharedPreferences(context).getString("alertType_" + thisCard.getId(), "");
+        		String alertTypeStr = PreferenceManager.getDefaultSharedPreferences(context).getString(prefAlertTypePrefix + thisCard.getId(), "");
         		if (alertTypeStr != "") {
         			mAlertType.setText(alertTypeStr);
         		}
@@ -200,17 +234,44 @@ public class BatTextActivity extends Activity {
       	
       		    });
         	} else {
-        		Log.d("AlertCard", "TextView was not found.");
+        		Log.d("AlertCard", "AlertType TextView was not found.");
+        	}
+        	
+        	// Setup contact
+        	mContact = (TextView) parent.findViewById(R.id.main_inner_contact);
+        	if(mContact!=null) {
+        		String contactStr = PreferenceManager.getDefaultSharedPreferences(context).getString(prefContactNamePrefix + thisCard.getId(), "");
+        		if (contactStr != "") {
+        			mContact.setText(contactStr);
+        		}
+        		mContact.setOnClickListener(new View.OnClickListener() {
+      		      @Override
+      		      public void onClick(View v) {
+      		    	mCurrentCardIdStr = thisCard.getId();
+      		    	
+      		    	Intent intent = new Intent(Intent.ACTION_PICK);
+      		    	intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+      		    	startActivityForResult(intent, PICK_CONTACT);
+      		    	
+					
+      		      }
+      	
+      		    });
+        	} else {
+        		Log.d("AlertCard", "AlertType TextView was not found.");
         	}
 
         }
         
         public void setAlertType(String alertType, AlertCard card) {
-        	//int mId = java.lang.Integer.parseInt(this.getId());
-        	//mAlertType = (TextView) .findViewById(R.id.main_inner_alerttype);
         	TextView alertTypeView = (TextView) mCardView.findViewById(R.id.main_inner_alerttype);
         	alertTypeView.setText(alertType);
-        	//mCardView.refreshCard(card);
+        	
+        }
+        
+        public void setContact(String name, AlertCard card) {
+        	TextView contactView = (TextView) mCardView.findViewById(R.id.main_inner_contact);
+        	contactView.setText(name);
         	
         }
     }
