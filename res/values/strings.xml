@@ -20,7 +20,7 @@
     <string name="inner_special_text_3">15%</string>
     <string name="alerttype_dialog_title">Select Alert Type</string>
     <string-array name="alerttype_options">
-        <item>Text Message</item>
+        <item>Text</item>
         <item>E-mail</item>
         <item>Other</item>
     </string-array>
