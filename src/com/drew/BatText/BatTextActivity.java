@@ -129,7 +129,6 @@ public class BatTextActivity extends Activity {
 	          String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 	          String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 	          Log.d("onActivityResultContact", "Contact Number: " + number);
-	          Toast.makeText(context, "Contact Number: " + number, Toast.LENGTH_SHORT).show();
 	          setContact(name, number, mCurrentCardIdStr); 
 	          
 	        }
@@ -140,12 +139,9 @@ public class BatTextActivity extends Activity {
 	
 	/****** Set Alert Value Methods **************/
 	public void setAlertType(String alertType, String alertId) {
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putString(prefAlertTypePrefix + alertId, alertType);
-		editor.commit();
 		int positionFromId =  java.lang.Integer.parseInt(alertId);  
 		AlertCard card = (AlertCard) mCardArrayAdapter.getItem(positionFromId);
-		card.setAlertType(alertType, card);
+		card.setAlertType(alertType);
 	}
 	
 	public String getAlertType(String alertId) {
@@ -153,13 +149,9 @@ public class BatTextActivity extends Activity {
 	}
 	
 	public void setContact(String name, String number, String alertId) {
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putString(prefContactNumberPrefix + alertId, number);
-		editor.putString(prefContactNamePrefix + alertId, name);
-		editor.commit();
 		int positionFromId =  java.lang.Integer.parseInt(alertId);  
 		AlertCard card = (AlertCard) mCardArrayAdapter.getItem(positionFromId);
-		card.setContact(name, card);
+		card.setContact(name, number);
 	}
 	
 	public String getContact(String alertId) {
@@ -263,15 +255,30 @@ public class BatTextActivity extends Activity {
 
         }
         
-        public void setAlertType(String alertType, AlertCard card) {
+        public void setAlertType(String alertType) {
         	TextView alertTypeView = (TextView) mCardView.findViewById(R.id.main_inner_alerttype);
-        	alertTypeView.setText(alertType);
+        	TextView contactView = (TextView) mCardView.findViewById(R.id.main_inner_contact);
         	
+    		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+    		
+        	if(!alertTypeView.getText().equals(alertType)) {
+        		alertTypeView.setText(alertType);
+            	contactView.setText(R.string.inner_special_text_1);
+            	editor.putString(prefAlertTypePrefix + thisCard.getId(), alertType);
+            	editor.putString(prefContactNumberPrefix + thisCard.getId(), getString(R.string.inner_special_text_1));
+        		editor.putString(prefContactNamePrefix + thisCard.getId(), getString(R.string.inner_special_text_1));
+        	}
+        	
+        	editor.commit();
         }
         
-        public void setContact(String name, AlertCard card) {
+        public void setContact(String name, String number) {
         	TextView contactView = (TextView) mCardView.findViewById(R.id.main_inner_contact);
         	contactView.setText(name);
+        	SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        	editor.putString(prefContactNumberPrefix + thisCard.getId(), number);
+    		editor.putString(prefContactNamePrefix + thisCard.getId(), name);
+    		editor.commit();
         	
         }
     }

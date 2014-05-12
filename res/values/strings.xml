@@ -15,8 +15,8 @@
     <string name="main_inner_default_text_2">to</string>
     <string name="main_inner_default_text_3">at</string>
     
-    <string name="inner_special_text_1">text</string>
-    <string name="inner_special_text_2">Drew</string>
+    <string name="inner_special_text_1">_____</string>
+    <string name="inner_special_text_2">_____</string>
     <string name="inner_special_text_3">15%</string>
     <string name="alerttype_dialog_title">Select Alert Type</string>
     <string-array name="alerttype_options">
